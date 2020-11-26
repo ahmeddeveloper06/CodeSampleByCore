@@ -1,0 +1,294 @@
+﻿@model CodeTset.Models.Members
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+
+<div class="container">
+    <form asp-action="Create" class="ajaxForm" id="form1">
+        <div class="row">
+
+            <div class="col-md-6">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <div class="row ">
+                        <div class="col-md-6">
+                            <label asp-for="FirstName" class="control-label"></label>
+                            <input asp-for="FirstName" class="form-control" />
+                            <span asp-validation-for="FirstName" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="LastName" class="control-label"></label>
+                            <input asp-for="LastName" class="form-control" />
+                            <span asp-validation-for="LastName" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label asp-for="CountryId" class="control-label"></label>
+                            @*<select asp-for="CountryId" class="form-control" id="CountryId"></select>*@
+                            <select name="CountryId" id="CountryId" onchange="LoadCities(this)" class="form-control">
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="CityId" class="control-label"></label>
+                            <select asp-for="CityId" id="CityId" class="form-control"></select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label asp-for="Gender" class="control-label"></label><br />
+                            <label for="male">Male</label>
+                            <input type="radio" name="gender" value="Male" />
+                            <label for="female">Female</label>
+                            <input type="radio" name="gender" value="Female" />
+                            <span asp-validation-for="Gender" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="BirthDate" class="control-label"></label>
+                            <input type="date" asp-for="BirthDate" class="form-control" />
+                            <span asp-validation-for="BirthDate" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label asp-for="PhoneNumber" class="control-label"></label>
+                            <input type="number" asp-for="PhoneNumber" class="form-control" />
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Email" class="control-label"></label>
+                            <input type="email" asp-for="Email" class="form-control" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label asp-for="Notes" class="control-label"></label>
+                            <textarea asp-for="Notes" type="text" class="form-control maxlength-handler" maxlength="150" placeholder=""></textarea>
+                            <span asp-validation-for="Notes" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>Member Status</label>
+                            <div class="form-group form-check">
+
+                                <label class="form-check-label">
+                                    <input class="form-check-input" style="margin-left: -20px;" asp-for="Active" /> @Html.DisplayNameFor(model => model.Active)
+                                </label>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <input type="submit" id="saveid" value="Save" class="btn btn-primary" />
+
+                        <a href="/Members/index" style="margin-left: 10px;" title="Show Members" class="btn PopUp btn-secondary"> Show Members</a>
+                    </div>
+                </div>
+            </div>
+
+
+<div class="col-md-6">
+    <div class="form-group">
+        <div class="form-group">
+            <div class=" control-label">
+                Upload Image
+            </div>
+            <div class="imagename">
+                <img src="~\imgs\200px-Image_of_none.svg.png" width="50%" />
+
+            </div><br />
+            <div class="form-group">
+
+                <div class="custom-file col-md-4">
+                    <input type="file" id="pathimgFile" name="ImageFile">
+
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+                </div>
+    </form>
+
+</div>
+@section css{
+
+    <link href="~/assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <link href="~/assets/bootstrap/css/valbootstrap.css" rel="stylesheet" type="text/css" />
+    <link href="~/validationassets/dist/css/bootstrapValidator.css" rel="stylesheet" />
+
+
+}
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script src="~/validationassets/vendor/bootstrap/js/bootstrap.min.js"></script>
+
+    <script src="~/validationassets/dist/js/bootstrapValidator.js"></script>
+
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $('#form1')
+                .bootstrapValidator({
+                    live: 'enabled',
+                    excluded: [':disabled'],
+                    submitButton: '$form1 button[type="submit"]',
+                    feedbackIcons: {
+                        valid: 'glyphicon glyphicon-ok',
+                        invalid: 'glyphicon glyphicon-remove',
+                        validating: 'glyphicon glyphicon-refresh'
+                    },
+                    fields: {
+                        FirstNname: {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The  FirstNname is required'
+                                }
+                            }
+                        },
+                        LastName: {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The LastName is required'
+                                }
+                            }
+                        },
+
+                        PhoneNumber: {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The  PhoneNumber is required'
+                                }
+                            }
+                        },
+                       
+
+
+                        Email: {
+                            validators: {
+                                notEmpty: {
+                                    message: 'The Email is required'
+                                }
+                            }
+                        },
+
+
+                    }
+                })
+
+
+        });
+
+    </script>
+
+
+
+    <script>
+    var Countries = []
+    //fetch categories from database
+    function LoadCountries(element) {
+        if (Countries.length == 0) {
+            //ajax function for fetch data
+            $.ajax({
+                type: "GET",
+                url: '/Members/getCountries',
+                data: {},
+                dataType: 'json',
+                success: function (data) {
+
+                    Countries = data;
+                    //render catagory
+                    renderCountries(element);
+                }
+            })
+        }
+        else {
+            //render catagory to the element
+            renderCountries(element);
+        }
+    }
+
+    function renderCountries(element) {
+        var $ele = $(element);
+        $ele.empty();
+        $ele.append($('<option />').val('0').text('Select'));
+        $.each(Countries, function (i, val) {
+            $ele.append('<option value = '+val.Id+'>'+val.Name+'</option>');
+        })
+    }
+
+    $(document).ready(function () {
+        LoadCountries($('#CountryId'));
+    });
+
+    $("#pathimgFile").change(function () {
+        readImgURL(this);
+    });
+
+    function readImgURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('.imagename img').attr('src', e.target.result);
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+
+    function LoadCities(id) {
+            var list = null;
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("getCities", "Members")',
+                data: { 'ID': $(id).val() },
+                success: function (data) {
+                    //render products to appropriate dropdown
+                    //renderProduct($(LevelDD).parents('.mycontainer').find('select.product'), data);
+                    var Classes = data;
+                    list += '<option value="' + '' + '">' + 'Select' + '</option>';
+                    $.each(data, function (index, d) {
+
+                        list += '<option value="' + d.Id + '">' + d.Name + '</option>';
+
+                    });
+
+                    $('#CityId').html(list);
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            })
+        }
+    </script>
+}

@@ -1,0 +1,91 @@
+﻿
+@{
+    ViewData["Title"] = "Show Members";
+}
+
+<h1>Show Members</h1>
+<link href="~/lib/datatables/css/dataTables.bootstrap4.min.css" rel="stylesheet" />
+<div class="container">
+    <div class="col-xs-6 text-right" >
+        <a href="/Members/Create" title="Add Member" class="btn PopUp btn-secondary"><i class="fa fa-plus"></i> ADD New Member</a>
+    </div>
+    <br />
+    <div style="width:100%; margin:0 auto;">
+        <table id="MemberDatatable" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>MemberID</th>
+                    <th>Status</th>
+                    <th>FirstName</th>
+                    <th>LastName</th>
+                    <th>Country</th>
+                    <th>Gender</th>
+                    <th>Notes</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <div class="row">
+
+    </div>
+</div>
+        @section Scripts
+{
+            <script src="~/lib/datatables/js/jquery.dataTables.min.js"></script>
+            <script src="~/lib/datatables/js/dataTables.bootstrap4.min.js"></script>
+            <script>
+                $(document).ready(function () {
+                    $("#MemberDatatable").DataTable({
+                        "processing": true,
+                        "serverSide": true,
+                        "filter": true,
+                        "ajax": {
+                            "url": "/Members/GetMembers",
+                            "type": "POST",
+                            "datatype": "json"
+                        },
+                        "columnDefs": [{
+                            "targets": [7],
+                            "visible": false,
+                            "searchable": false
+                        }],
+                        "columns": [
+                            { "data": "Id", "name": "Id", "autoWidth": true },
+                            {
+                                "render": function (data, type, row) {
+                                    return "<input class='cbActive' type='checkbox' data-id=" + row["Id"]
+                                        + (row["Active"] ? " checked " : "") + "  />";
+                                }
+                            },
+                            { "data": "FirstName", "name": "FirstName", "autoWidth": true },
+                            { "data": "LastName", "name": "LastName", "autoWidth": true },
+                            
+                            {
+                                "render": function (data, type, row) {
+                                    return ToCountryName(row.CountryId);
+                                }
+                            },
+                            { "data": "Gender", "name": "Gender", "autoWidth": true },
+                            { "data": "Notes", "name": "Notes", "autoWidth": true },
+                            {
+                                "render": function (data, row) { return "<a href='#' class='btn btn-danger' onclick=DeleteCustomer('" + row.Id + "'); >Delete</a>"; }
+                            },
+                        ]
+                    });
+                });
+
+
+                function ToCountryName(id) {
+           
+                    if (id == 1)
+                        return "Palestine";
+                    else if (id == 2)
+                        return "USA";
+                    else if (id == 3)
+                        return "Egypt";
+                }
+               
+            </script>
+        }
